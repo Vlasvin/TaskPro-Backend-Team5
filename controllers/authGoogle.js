@@ -33,14 +33,11 @@ googleRedirect = async (req, res) => {
     data: {
       client_id: process.env.GOOGLE_CLIENT_ID,
       client_secret: process.env.GOOGLE_CLIENT_SECRET,
-      redirect_uri: `${process.env.BASE_URL}/auth/google-redirect`,
+      redirect_uri: `${process.env.BASE_URL}/users/google-redirect`,
       grant_type: "authorization_code",
       code: code,
     },
   });
-
-  //видає помилку на цьому етапі
-  console.log(tokenData);
 
   const userData = await axios({
     url: "https://www.googleapis.com/oauth2/v2/userinfo",
@@ -49,8 +46,9 @@ googleRedirect = async (req, res) => {
       Authorization: `Bearer ${tokenData.data.access_token}`,
     },
   });
+  console.log(userData);
 
-  //тут повинна бути логіка обробки юзера, якщо такого email немає в базі, створюємо нового користувача. Також створюємо accessToken
+  //тут повинна бути логіка обробки юзера, якщо такого email немає в базі, створюємо нового користувача. Також створюємо accessToken. Перевіряв роботу додавши на любий фронт такий лінк   <a href="http://localhost:3001/api/users/google">GOOGLE</a> Думаю класно було б зробити, щоб фото з userData.picture зберігалось як аватар нашого юзера, якщо воно є
 
   return res.redirect(
     `${process.env.FRONTEND_URL}?accessToken=${accessToken}&refreshToken=${refreshToken}`
