@@ -17,22 +17,12 @@ router.get("/current", authenticate, ctrl.getCurrent);
 
 router.post("/logout", authenticate, ctrl.logout);
 
-router.patch("/", authenticate, ctrl.updateSubscription);
-
 router.patch(
   "/avatars",
   authenticate,
   upload.single("avatar"),
   isFileExist,
   ctrl.updateAvatar
-);
-
-router.get("/verify/:verificationToken", ctrl.verifyEmail);
-
-router.post(
-  "/verify",
-  validateBody(schemas.emailSchema),
-  ctrl.resendVerifyEmail
 );
 
 module.exports = router;

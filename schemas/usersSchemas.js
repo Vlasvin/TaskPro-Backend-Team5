@@ -3,6 +3,10 @@ const Joi = require("joi");
 
 const userSchema = new Schema(
   {
+    name: {
+      type: String,
+      required: [true, "User must have a name"],
+    },
     password: {
       type: String,
       required: [true, "Set password for user"],
@@ -12,28 +16,21 @@ const userSchema = new Schema(
       required: [true, "Email is required"],
       unique: true,
     },
-    subscription: {
-      type: String,
-      enum: ["starter", "pro", "business"],
-      default: "starter",
-    },
-    verify: {
-      type: Boolean,
-      default: false,
-    },
-    verificationToken: {
-      type: String,
-      required: [true, "Verify token is required"],
-    },
     token: String,
     avatarURL: String,
+    theme: {
+      type: String,
+      enum: ['violet', 'light', 'dark'],
+      default: 'light'
+    }
   },
   { versionKey: false }
 );
 
 const registerSchema = Joi.object({
+  name: Joi.string().min(2).max(32).required(),
   email: Joi.string().email().required(),
-  password: Joi.string().min(6).required(),
+  password: Joi.string().min(8).max(32).required(),
 });
 
 const emailSchema = Joi.object({
@@ -42,7 +39,7 @@ const emailSchema = Joi.object({
 
 const loginSchema = Joi.object({
   email: Joi.string().email().required(),
-  password: Joi.string().min(6).required(),
+  password: Joi.string().min(8).max(32).required(),
 });
 
 const schemas = { registerSchema, emailSchema, loginSchema };
