@@ -52,10 +52,6 @@ const login = async (req, res) => {
         throw HttpError(401, "Email or password is wrong");
     }
 
-    if (!user.verify) {
-        throw HttpError(401, "Email not verified");
-    }
-
     const passwordCompare = await bcrypt.compare(password, user.password);
 
     if (!passwordCompare) {
@@ -70,16 +66,14 @@ const login = async (req, res) => {
         token,
         user: {
             email: user.email,
-            subscription: user.subscription,
         },
     });
 };
 
 const getCurrent = async (req, res) => {
-    const { email, subscription } = req.user;
+    const { email } = req.user;
     res.status(200).json({
         email,
-        subscription,
     });
 };
 
