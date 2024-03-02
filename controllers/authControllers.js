@@ -5,12 +5,11 @@ const path = require("path");
 const fs = require("fs/promises");
 const crypto = require("crypto");
 const Jimp = require("jimp");
-const { uuid } = require("uuidv4");
 
 const { User } = require("../schemas/usersSchemas");
-const { ctrlWrapper, HttpError, sendEmail } = require("../helpers");
+const { ctrlWrapper, HttpError } = require("../helpers");
 
-const { SECRET_KEY, BASE_URL } = process.env;
+const { SECRET_KEY } = process.env;
 
 const avatarsDir = path.join(__dirname, "../", "public", "avatars");
 
@@ -25,22 +24,12 @@ const register = async (req, res) => {
   const passwordHash = await bcrypt.hash(password, 10);
   const emailHash = crypto.createHash("md5").update(email).digest("hex");
   const avatarURL = gravatar.url(emailHash);
-  const verificationToken = uuid();
 
   const newUser = await User.create({
     ...req.body,
     password: passwordHash,
     avatarURL,
-    verificationToken,
   });
-
-  const verifyEmail = {
-    to: email,
-    subject: "Verify email",
-    html: `<p><a target="_blank" href="${BASE_URL}/api/users/verify/${verificationToken}">Click verify email</a></p>`,
-  };
-
-  await sendEmail(verifyEmail);
 
   res.status(201).json({
     user: {
