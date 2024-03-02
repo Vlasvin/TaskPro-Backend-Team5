@@ -86,21 +86,43 @@ const logout = async (req, res) => {
     });
 };
 
-const updateAvatar = async (req, res) => {
+const updateUser = async (req, res) => {
     const { _id } = req.user;
-    const { path: tempUpload, originalname } = req.file;
+    if (req.file) {
+        const { path: tempUpload, originalname } = req.file;
 
-    const image = await Jimp.read(tempUpload);
-    await image.resize(250, 250).write(tempUpload);
+        const image = await Jimp.read(tempUpload);
+        await image.resize(250, 250).write(tempUpload);
 
-    const filename = `${_id}_${originalname}`;
-    const newUpload = path.join(avatarsDir, filename);
-    await fs.rename(tempUpload, newUpload);
-    const avatarURL = path.join("avatars", filename);
-    await User.findByIdAndUpdate(_id, { avatarURL });
+        const filename = `${_id}_${originalname}`;
+        const newUpload = path.join(avatarsDir, filename);
+        await fs.rename(tempUpload, newUpload);
+        const avatarURL = path.join("avatars", filename);
+        await User.findByIdAndUpdate(_id, { avatarURL });
+    }
+
+    const updateFields = req.body;
+    const { password } = req.body;
+
+    if (password) {
+        const passwordHash = await bcrypt.hash(password, 10);
+        updateFields.password = passwordHash;
+    }
+
+    const updatedUser = await User.findByIdAndUpdate(
+        _id,
+        updateFields,
+        {
+            new: true,
+        }
+    );
 
     res.json({
-        avatarURL,
+        user: {
+            name: updatedUser.name,
+            email: updatedUser.email,
+            avatarURL: updatedUser.avatarURL,
+        },
     });
 };
 
@@ -109,5 +131,5 @@ module.exports = {
     login: ctrlWrapper(login),
     getCurrent: ctrlWrapper(getCurrent),
     logout: ctrlWrapper(logout),
-    updateAvatar: ctrlWrapper(updateAvatar),
+    updateUser: ctrlWrapper(updateUser),
 };
