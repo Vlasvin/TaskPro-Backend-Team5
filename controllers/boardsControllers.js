@@ -15,6 +15,7 @@ async function getById(req, res) {
   const { boardId } = req.params;
   const board = await Board.findById(boardId);
   const columns = await Column.find({ owner: board._id });
+  const { priority } = req.query;
 
   if (columns.length > 0) {
     const columnsWithOwnCards = await Column.aggregate([
@@ -23,10 +24,10 @@ async function getById(req, res) {
       },
       {
         $lookup: {
-          from: "cards",
+          from: "todos",
           localField: "_id",
           foreignField: "owner",
-          as: "cards",
+          as: "todos",
         },
       },
     ]);
