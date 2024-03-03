@@ -6,10 +6,9 @@ const columnSchema = new Schema(
     title: {
       type: String,
       required: true,
-      //   maxLength: 30,
       trim: true,
     },
-    owner: {
+    board: {
       type: Types.ObjectId,
       ref: "Board",
       required: true,

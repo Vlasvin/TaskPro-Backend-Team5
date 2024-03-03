@@ -4,53 +4,52 @@ const ctrl = require("../controllers/todosControllers");
 const { schemas } = require("../schemas/todosSchemas");
 const {
   validateBody,
-  isValidId,
+  isValidTodoId,
+  isValidColumnId,
   todoWithoutId,
   authenticate,
-  // isCurrentUserOwner,
 } = require("../middlewares");
 
 const todosRouter = express.Router();
 
-todosRouter.get(
-  "/:id",
-
-  authenticate,
-
-  ctrl.getById
-);
-
-todosRouter.delete(
-  "/:id",
-  isValidId,
-  todoWithoutId,
-  authenticate,
-  // isCurrentUserOwner,
-  ctrl.deleteTodo
-);
-
 todosRouter.post(
   "/:columnId",
+  isValidColumnId,
   validateBody(schemas.createTodoSchema),
   authenticate,
   ctrl.createTodo
 );
 
-todosRouter.put(
+todosRouter.get(
   "/:todoId",
-  isValidId,
+  isValidTodoId,
+  todoWithoutId,
+  authenticate,
+  ctrl.getById
+);
+
+todosRouter.delete(
+  "/:todoId",
+  isValidTodoId,
+  todoWithoutId,
+  authenticate,
+  ctrl.deleteTodo
+);
+
+todosRouter.patch(
+  "/:todoId",
+  isValidTodoId,
   todoWithoutId,
   validateBody(schemas.updateTodoSchema),
   authenticate,
-  // isCurrentUserOwner,
   ctrl.updateTodo
 );
 
 todosRouter.patch(
-  "/:cardId/owner/:columnId",
-
+  "/:todoId/owner/:columnId",
+  isValidColumnId,
+  isValidTodoId,
   authenticate,
-  // isCurrentUserOwner,
   ctrl.changeColumn
 );
 

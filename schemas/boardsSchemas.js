@@ -6,7 +6,6 @@ const boardSchema = new Schema(
     title: {
       type: String,
       required: true,
-      //   maxLength: 30,
       trim: true,
     },
     iconsURL: String,
@@ -27,15 +26,13 @@ const Board = model("Board", boardSchema);
 
 const createBoardSchema = Joi.object({
   title: Joi.string().required(),
-  iconsURL: Joi.string(),
+  iconURL: Joi.string(),
   backgroundURL: Joi.string(),
-  // iconsURL: Joi.string().required(),
-  // backgroundURL: Joi.string().required(),
 });
 
 const updateBoardSchema = Joi.object({
   title: Joi.string(),
-  iconsURL: Joi.string(),
+  iconURL: Joi.string(),
   backgroundURL: Joi.string(),
 });
 

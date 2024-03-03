@@ -22,7 +22,7 @@ const todoSchema = new Schema(
       type: Date,
       required: true,
     },
-    owner: {
+    column: {
       type: Types.ObjectId,
       ref: "Column",
       required: true,

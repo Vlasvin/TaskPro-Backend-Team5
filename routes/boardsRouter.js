@@ -4,33 +4,13 @@ const ctrl = require("../controllers/boardsControllers");
 const { schemas } = require("../schemas/boardsSchemas");
 const {
   validateBody,
-  isValidId,
+  isValidBoardId,
   boardWithoutId,
   authenticate,
-  isCurrentUserOwner,
+  isUserBoardOwner,
 } = require("../middlewares");
 
 const boardsRouter = express.Router();
-
-boardsRouter.get("/", authenticate, ctrl.getAllBoards);
-
-boardsRouter.get(
-  "/:boardId",
-  // isValidId,
-  // boardWithoutId,
-  authenticate,
-  // isCurrentUserOwner,
-  ctrl.getById
-);
-
-boardsRouter.delete(
-  "/:boardId",
-  isValidId,
-  boardWithoutId,
-  authenticate,
-  isCurrentUserOwner,
-  ctrl.deleteBoard
-);
 
 boardsRouter.post(
   "/",
@@ -39,23 +19,33 @@ boardsRouter.post(
   ctrl.createBoard
 );
 
-boardsRouter.put(
+boardsRouter.get("/", authenticate, ctrl.getAllBoards);
+
+boardsRouter.get(
   "/:boardId",
-  isValidId,
+  isValidBoardId,
   boardWithoutId,
-  validateBody(schemas.updateBoardSchema),
   authenticate,
-  isCurrentUserOwner,
-  ctrl.updateBoard
+  isUserBoardOwner,
+  ctrl.getById
+);
+
+boardsRouter.delete(
+  "/:boardId",
+  isValidBoardId,
+  boardWithoutId,
+  authenticate,
+  isUserBoardOwner,
+  ctrl.deleteBoard
 );
 
 boardsRouter.patch(
   "/:boardId",
-  isValidId,
+  isValidBoardId,
   boardWithoutId,
   validateBody(schemas.updateBoardSchema),
   authenticate,
-  isCurrentUserOwner,
+  isUserBoardOwner,
   ctrl.updateCurrentBoard
 );
 

@@ -4,48 +4,44 @@ const ctrl = require("../controllers/columnsControllers");
 const { schemas } = require("../schemas/columnsSchemas");
 const {
   validateBody,
-  isValidId,
+  isValidBoardId,
+  isValidColumnId,
   columnWithoutId,
   authenticate,
-  // isCurrentUserOwner,
 } = require("../middlewares");
 
 const columnsRouter = express.Router();
-
-// columnsRouter.get("/:boardId", authenticate, ctrl.getAllColumns);
-
-columnsRouter.get(
-  "/:columnId",
-  // isValidId,
-  // columnWithoutId,
-  authenticate,
-  // isCurrentUserOwner,
-  ctrl.getById
-);
-
-columnsRouter.delete(
-  "/:columnId",
-  isValidId,
-  columnWithoutId,
-  authenticate,
-  // isCurrentUserOwner,
-  ctrl.deleteColumn
-);
 
 columnsRouter.post(
   "/:boardId",
   validateBody(schemas.createColumnSchema),
   authenticate,
+  isValidBoardId,
   ctrl.createColumn
 );
 
-columnsRouter.put(
+columnsRouter.get(
   "/:columnId",
-  isValidId,
+  isValidColumnId,
+  columnWithoutId,
+  authenticate,
+  ctrl.getById
+);
+
+columnsRouter.delete(
+  "/:columnId",
+  isValidColumnId,
+  columnWithoutId,
+  authenticate,
+  ctrl.deleteColumn
+);
+
+columnsRouter.patch(
+  "/:columnId",
+  isValidColumnId,
   columnWithoutId,
   validateBody(schemas.updateColumnSchema),
   authenticate,
-  // isCurrentUserOwner,
   ctrl.updateColumn
 );
 

@@ -1,9 +1,9 @@
 const { HttpError } = require("../helpers/index.js");
-const boardsService = require("../services/boardsServices.js");
+const boardsServices = require("../services/boardsServices.js");
 
 const boardWithoutId = async (req, res, next) => {
-  const { id } = req.params;
-  const todo = await boardsService.getBoardById(id);
+  const { boardId } = req.params;
+  const todo = await boardsServices.getBoardById(boardId);
 
   if (!todo) {
     next(HttpError(404, "Not found"));

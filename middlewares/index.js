@@ -1,21 +1,25 @@
 const validateBody = require("./validateBody");
-const isValidId = require("./isValidId");
+const isValidBoardId = require("./isValidBoardId");
+const isValidColumnId = require("./isValidColumnId");
+const isValidTodoId = require("./isValidTodoId");
 const authenticate = require("./authenticate");
 const boardWithoutId = require("./boardWithoutId");
 const columnWithoutId = require("./columnWithoutId");
 const todoWithoutId = require("./todoWithoutId");
-const isCurrentUserOwner = require("./isCurrentUserOwner");
+const isUserBoardOwner = require("./isUserBoardOwner");
 const isFileExist = require("./isFileExist");
 const upload = require("./upload");
 
 module.exports = {
   validateBody,
-  isValidId,
+  isValidBoardId,
+  isValidColumnId,
+  isValidTodoId,
   authenticate,
   todoWithoutId,
   columnWithoutId,
   boardWithoutId,
-  isCurrentUserOwner,
+  isUserBoardOwner,
   isFileExist,
   upload,
 };
