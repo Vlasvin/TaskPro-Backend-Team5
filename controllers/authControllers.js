@@ -109,13 +109,9 @@ const updateUser = async (req, res) => {
         updateFields.password = passwordHash;
     }
 
-    const updatedUser = await User.findByIdAndUpdate(
-        _id,
-        updateFields,
-        {
-            new: true,
-        }
-    );
+    const updatedUser = await User.findByIdAndUpdate(_id, updateFields, {
+        new: true,
+    });
 
     res.json({
         user: {
@@ -126,10 +122,21 @@ const updateUser = async (req, res) => {
     });
 };
 
+const updateTheme = async (req, res) => {
+    const { _id } = req.user;
+    const updatedUser = await User.findByIdAndUpdate(_id, req.body, {
+        new: true,
+    });
+    res.json({
+        theme: updatedUser.theme,
+    });
+};
+
 module.exports = {
     register: ctrlWrapper(register),
     login: ctrlWrapper(login),
     getCurrent: ctrlWrapper(getCurrent),
     logout: ctrlWrapper(logout),
     updateUser: ctrlWrapper(updateUser),
+    updateTheme: ctrlWrapper(updateTheme),
 };

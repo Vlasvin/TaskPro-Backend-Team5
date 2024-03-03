@@ -1,6 +1,8 @@
 const { Schema, model } = require("mongoose");
 const Joi = require("joi");
 
+const themeVariants = ["violet", "light", "dark"];
+
 const userSchema = new Schema(
     {
         name: {
@@ -20,7 +22,7 @@ const userSchema = new Schema(
         avatarURL: String,
         theme: {
             type: String,
-            enum: ["violet", "light", "dark"],
+            enum: themeVariants,
             default: "light",
         },
     },
@@ -44,7 +46,11 @@ const updateSchema = Joi.object({
     password: Joi.string().min(8).max(32),
 });
 
-const schemas = { registerSchema, updateSchema, loginSchema };
+const updateTheme = Joi.object({
+    theme: Joi.string().valid(...themeVariants),
+})
+
+const schemas = { registerSchema, updateSchema, loginSchema, updateTheme };
 
 const User = model("user", userSchema);
 
