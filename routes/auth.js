@@ -6,6 +6,7 @@ const {
   upload
 } = require("../middlewares");
 const ctrl = require("../controllers/authControllers");
+const ctr = require("../controllers/authGoogle");
 
 const router = express.Router();
 router.post("/register", validateBody(schemas.registerSchema), ctrl.register);
@@ -23,5 +24,8 @@ router.patch(
   upload.single("avatar"),
   ctrl.updateUser
 );
+
+router.get("/google", ctr.googleAuth);
+router.get("/google-redirect", ctr.googleRedirect);
 
 module.exports = router;
