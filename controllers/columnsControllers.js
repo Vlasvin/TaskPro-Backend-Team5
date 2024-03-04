@@ -27,10 +27,10 @@ const deleteColumn = async (req, res) => {
     res.status(200).json({
       deletedColumn,
     });
-  const deletedTodo = await Todo.deleteMany({ column: columnId });
+  const deletedTodos = await Todo.deleteMany({ column: columnId });
   res.status(200).json({
     deletedColumn,
-    deletedTodo,
+    deletedTodos,
   });
 };
 
