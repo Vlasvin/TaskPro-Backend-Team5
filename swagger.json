@@ -193,6 +193,80 @@
           }
         }
       }
+    },
+    "/theme": {
+      "patch": {
+        "tags": ["User"],
+        "summary": "Update user's theme",
+        "security": [{ "Bearer": [] }],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateThemeRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UpdateThemeResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request",
+            "content": {}
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {}
+          }
+        }
+      }
+    },
+    "/api/boards": {
+      "post": {
+        "tags": ["Boards"],
+        "summary": "Create a new board",
+        "security": [{ "Bearer": [] }],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateBoardRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Board created successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Board"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request",
+            "content": {}
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {}
+          }
+        }
+      }
     }
   },
   "components": {
@@ -319,8 +393,104 @@
             }
           }
         }
+      },
+      "UpdateThemeRequest": {
+        "type": "object",
+        "properties": {
+          "theme": {
+            "type": "string",
+            "enum": ["violet", "light", "dark"],
+            "description": "User's preferred theme"
+          }
+        }
+      },
+
+      "UpdateThemeResponse": {
+        "type": "object",
+        "properties": {
+          "theme": {
+            "type": "string",
+            "enum": ["violet", "light", "dark"],
+            "description": "User's preferred theme"
+          }
+        }
+      },
+      "CreateBoardRequest": {
+        "type": "object",
+        "properties": {
+          "title": {
+            "type": "string",
+            "description": "Board's title"
+          },
+          "iconURL": {
+            "type": "string",
+            "description": "URL to board's icon image"
+          },
+          "backgroundURL": {
+            "type": "string",
+            "description": "URL to board's background image"
+          }
+        },
+        "required": ["title"]
+      },
+      "CreateBoardResponse": {
+        "type": "object",
+        "properties": {
+          "_id": {
+            "type": "string",
+            "description": "Board's ID",
+            "example": {
+              "_id": "611af8bfe7b6b918a8319b26"
+            }
+          },
+          "title": {
+            "type": "string",
+            "description": "Board's title",
+            "example": {
+              "title": "Project X"
+            }
+          },
+          "iconURL": {
+            "type": "string",
+            "description": "URL to board's icon image",
+            "example": {
+              "iconURL": "https://example.com/icons/project_x.png"
+            }
+          },
+          "backgroundURL": {
+            "type": "string",
+            "description": "URL to board's background image",
+            "example": {
+              "backgroundURL": "https://example.com/backgrounds/project_x.jpg"
+            }
+          },
+          "owner": {
+            "type": "string",
+            "description": "Owner's user ID",
+            "example": {
+              "owner": "611af8bfe7b6b918a8319b27"
+            }
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time",
+            "description": "Board's creation date",
+            "example": {
+              "createdAt": "2024-03-03T14:03:37.397+00:00"
+            }
+          },
+          "updatedAt": {
+            "type": "string",
+            "format": "date-time",
+            "description": "Board's last update date",
+            "example": {
+              "updatedAt": "2024-03-03T18:17:41.576+00:00"
+            }
+          }
+        }
       }
     },
+
     "securitySchemes": {
       "Bearer": {
         "type": "http",
