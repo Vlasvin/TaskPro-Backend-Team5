@@ -4,6 +4,9 @@ const cors = require("cors");
 const swaggerUi = require("swagger-ui-express");
 const swaggerDocument = require("./swagger.json");
 const authRouter = require("./routes/auth.js");
+const todosRouter = require("./routes/todosRouter.js");
+const boardsRouter = require("./routes/boardsRouter.js");
+const columnsRouter = require("./routes/columnsRouter.js");
 
 const app = express();
 
@@ -13,6 +16,9 @@ app.use(express.json());
 app.use(express.static("public"));
 
 app.use("/api/users", authRouter);
+app.use("/api/todos", todosRouter);
+app.use("/api/boards", boardsRouter);
+app.use("/api/columns", columnsRouter);
 
 app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 

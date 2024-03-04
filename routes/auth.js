@@ -14,12 +14,14 @@ router.get("/current", authenticate, ctrl.getCurrent);
 router.post("/logout", authenticate, ctrl.logout);
 
 router.patch(
-  "/",
-  authenticate,
-  validateBody(schemas.updateSchema),
-  upload.single("avatar"),
-  ctrl.updateUser
+    "/",
+    authenticate,
+    validateBody(schemas.updateSchema),
+    upload.single("avatar"),
+    ctrl.updateUser
 );
+
+router.patch("/theme", authenticate, validateBody(schemas.updateTheme), ctrl.updateTheme);
 
 router.get("/google", ctr.googleAuth);
 router.get("/google-redirect", ctr.googleRedirect);
