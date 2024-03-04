@@ -3,6 +3,12 @@ const { ctrlWrapper } = require("../helpers/index.js");
 
 const { Todo } = require("../schemas/todosSchemas");
 
+const createColumn = async (req, res) => {
+  const { boardId: board } = req.params;
+  const column = await serv.addColumn({ ...req.body, board });
+  res.status(201).json(column);
+};
+
 const getById = async (req, res) => {
   const { columnId } = req.params;
   const column = await serv.getColumnById(columnId);
@@ -15,14 +21,17 @@ const getById = async (req, res) => {
 
 const deleteColumn = async (req, res) => {
   const { columnId } = req.params;
-  const column = await serv.removeColumn(columnId);
-  res.status(200).json(column);
-};
-
-const createColumn = async (req, res) => {
-  const { boardId: board } = req.params;
-  const column = await serv.addColumn({ ...req.body, board });
-  res.status(201).json(column);
+  const deletedColumn = await serv.removeColumn(columnId);
+  const todos = await Todo.find({ column: columnId });
+  if (!todos)
+    res.status(200).json({
+      deletedColumn,
+    });
+  const deletedTodo = await Todo.deleteMany({ column: columnId });
+  res.status(200).json({
+    deletedColumn,
+    deletedTodo,
+  });
 };
 
 const updateColumn = async (req, res) => {
