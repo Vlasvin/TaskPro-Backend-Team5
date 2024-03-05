@@ -252,7 +252,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/Board"
+                  "$ref": "#/components/schemas/CreateBoardResponse"
                 }
               }
             }
@@ -266,9 +266,192 @@
             "content": {}
           }
         }
+      },
+
+      "get": {
+        "tags": ["Boards"],
+        "summary": "Get all boards",
+        "security": [{ "Bearer": [] }],
+        "responses": {
+          "200": {
+            "description": "Successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Board"
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {}
+          }
+        }
+      }
+    },
+
+    "/api/boards/{boardId}": {
+      "get": {
+        "tags": ["Boards"],
+        "summary": "Get board by ID",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "boardId",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "ObjectId"
+            },
+            "description": "ID of the board to get"
+          }
+        ],
+        "security": [{ "Bearer": [] }],
+        "responses": {
+          "200": {
+            "description": "Successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Board"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {}
+          },
+          "404": {
+            "description": "Board not found",
+            "content": {}
+          }
+        }
+      },
+
+      "delete": {
+        "tags": ["Boards"],
+        "summary": "Delete board by ID",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "boardId",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "ObjectId"
+            },
+            "description": "ID of the board to delete"
+          }
+        ],
+        "security": [{ "Bearer": [] }],
+        "responses": {
+          "200": {
+            "description": "Successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "deletedBoard": {
+                      "$ref": "#/components/schemas/Board"
+                    },
+                    "deletedColumn": {
+                      "type": "object",
+                      "properties": {
+                        "n": {
+                          "type": "number",
+                          "description": "Number of columns deleted"
+                        },
+                        "ok": {
+                          "type": "number",
+                          "description": "Operation status"
+                        }
+                      }
+                    },
+                    "deletedTodo": {
+                      "type": "object",
+                      "properties": {
+                        "n": {
+                          "type": "number",
+                          "description": "Number of todos deleted"
+                        },
+                        "ok": {
+                          "type": "number",
+                          "description": "Operation status"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {}
+          },
+          "404": {
+            "description": "Board not found",
+            "content": {}
+          }
+        }
+      },
+
+      "patch": {
+        "tags": ["Boards"],
+        "summary": "Update board by ID",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "boardId",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "ObjectId"
+            },
+            "description": "ID of the board to update"
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateBoardRequest"
+              }
+            }
+          }
+        },
+        "security": [{ "Bearer": [] }],
+        "responses": {
+          "200": {
+            "description": "Successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Board"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {}
+          },
+          "404": {
+            "description": "Board not found",
+            "content": {}
+          }
+        }
       }
     }
   },
+
   "components": {
     "schemas": {
       "RegistrationRequest": {
@@ -486,6 +669,109 @@
             "example": {
               "updatedAt": "2024-03-03T18:17:41.576+00:00"
             }
+          }
+        }
+      },
+
+      "Board": {
+        "type": "object",
+        "properties": {
+          "_id": {
+            "type": "string",
+            "description": "Ідентифікатор дошки"
+          },
+          "title": {
+            "type": "string",
+            "description": "Назва дошки"
+          },
+          "iconURL": {
+            "type": "string",
+            "description": "URL до значка дошки"
+          },
+          "backgroundURL": {
+            "type": "string",
+            "description": "URL до фонового зображення дошки"
+          },
+          "owner": {
+            "type": "string",
+            "description": "Ідентифікатор власника дошки"
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time",
+            "description": "Дата створення дошки"
+          },
+          "updatedAt": {
+            "type": "string",
+            "format": "date-time",
+            "description": "Дата останнього оновлення дошки"
+          }
+        },
+        "example": {
+          "board": {
+            "_id": "65e7323795f66d6990d1272e",
+            "title": "My tasks",
+            "iconURL": "https://example.com/icons/board_icon.png",
+            "backgroundURL": "https://example.com/backgrounds/board_background.jpg",
+            "owner": "65e4e00580d9b47fb7b71a93",
+            "createdAt": "2024-03-05T14:54:47.187Z",
+            "updatedAt": "2024-03-05T14:54:47.187Z"
+          },
+          "columns": []
+        }
+      },
+      "columns": {
+        "type": "array",
+        "items": {
+          "type": "object",
+          "properties": {
+            "_id": {
+              "type": "string",
+              "description": "Column ID"
+            },
+            "title": {
+              "type": "string",
+              "description": "Column title"
+            },
+            "todos": {
+              "type": "array",
+              "items": {
+                "$ref": "#/components/schemas/Todo"
+              },
+              "description": "List of tasks in this column"
+            }
+          }
+        },
+
+        "BoardDetails": {
+          "type": "object",
+          "properties": {
+            "board": {
+              "$ref": "#/components/schemas/Board"
+            },
+            "columns": {
+              "type": "array",
+              "items": {
+                "$ref": "#/components/schemas/ColumnWithCards"
+              }
+            }
+          }
+        }
+      },
+      "UpdateBoardRequest": {
+        "type": "object",
+        "properties": {
+          "title": {
+            "type": "string",
+            "description": "Нова назва дошки"
+          },
+          "iconURL": {
+            "type": "string",
+            "description": "Новий URL до значка дошки"
+          },
+          "backgroundURL": {
+            "type": "string",
+            "description": "Новий URL до фонового зображення дошки"
           }
         }
       }
