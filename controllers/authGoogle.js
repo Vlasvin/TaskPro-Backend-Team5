@@ -46,7 +46,6 @@ googleRedirect = async (req, res) => {
       Authorization: `Bearer ${tokenData.data.access_token}`,
     },
   });
-  console.log(userData);
 
   //тут повинна бути логіка обробки юзера, якщо такого email немає в базі, створюємо нового користувача. Також створюємо accessToken. Перевіряв роботу додавши на любий фронт такий лінк   <a href="http://localhost:3001/api/users/google">GOOGLE</a> Думаю класно було б зробити, щоб фото з userData.picture зберігалось як аватар нашого юзера, якщо воно є
 

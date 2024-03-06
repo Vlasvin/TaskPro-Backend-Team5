@@ -1,6 +1,8 @@
 const express = require("express");
 const morgan = require("morgan");
 const cors = require("cors");
+const swaggerUi = require("swagger-ui-express");
+const swaggerDocument = require("./swagger.json");
 const authRouter = require("./routes/auth.js");
 const todosRouter = require("./routes/todosRouter.js");
 const boardsRouter = require("./routes/boardsRouter.js");
@@ -18,11 +20,13 @@ app.use("/api/todos", todosRouter);
 app.use("/api/boards", boardsRouter);
 app.use("/api/columns", columnsRouter);
 
+app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerDocument));
+
 app.use((_, res) => {
   res.status(404).json({ message: "Route not found" });
 });
 
-app.use((err, req, res, next) => {
+http: app.use((err, req, res, next) => {
   const { status = 500, message = "Server error" } = err;
   res.status(status).json({ message });
 });
