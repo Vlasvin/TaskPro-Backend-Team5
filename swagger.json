@@ -13,7 +13,7 @@
   "produces": ["application/json", "multipart/form-data"],
   "servers": [
     { "url": "http://localhost:3001" },
-    { "url": "https://taskpro-backend-uiwy.onrender.com" }
+    { "url": "http://taskpro-backend-uiwy.onrender.com" }
   ],
   "tags": [
     {
@@ -449,6 +449,465 @@
           }
         }
       }
+    },
+    "/api/columns/{boardId}": {
+      "post": {
+        "tags": ["Columns"],
+        "summary": "Create a new column",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "boardId",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "description": "ID of the board to which the column belongs"
+            },
+            "description": "Board ID"
+          }
+        ],
+        "security": [{ "Bearer": [] }],
+        "requestBody": {
+          "description": "Column object to be created",
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateColumnRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Column created successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Column"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request",
+            "content": {}
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {}
+          }
+        }
+      }
+    },
+    "/api/columns/{columnId}": {
+      "get": {
+        "tags": ["Columns"],
+        "summary": "Get column by ID",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "columnId",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "ObjectId",
+              "description": "ID of the column to get"
+            },
+            "description": "Column ID"
+          }
+        ],
+        "security": [{ "Bearer": [] }],
+
+        "responses": {
+          "200": {
+            "description": "Successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ColumnWithTodos"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Bad request",
+            "content": {}
+          },
+          "404": {
+            "description": "Column not found",
+            "content": {}
+          }
+        }
+      },
+      "delete": {
+        "tags": ["Columns"],
+        "summary": "Delete column by ID",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "columnId",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "ObjectId"
+            },
+            "description": "ID of the column to delete"
+          }
+        ],
+        "security": [{ "Bearer": [] }],
+        "responses": {
+          "200": {
+            "description": "Column deleted successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Column"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {}
+          },
+          "404": {
+            "description": "Column not found",
+            "content": {}
+          }
+        }
+      },
+
+      "patch": {
+        "tags": ["Columns"],
+        "summary": "Update column by ID",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "columnId",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "ObjectId"
+            },
+            "description": "ID of the column to update"
+          }
+        ],
+        "requestBody": {
+          "description": "Updated column object",
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateColumnRequest"
+              }
+            }
+          }
+        },
+        "security": [{ "Bearer": [] }],
+        "responses": {
+          "200": {
+            "description": "Column updated successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Column"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {}
+          },
+          "404": {
+            "description": "Column not found",
+            "content": {}
+          }
+        }
+      }
+    },
+    "/api/todos/{columnId}": {
+      "post": {
+        "tags": ["Todos"],
+        "summary": "Create a new todo",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "columnId",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "ObjectId",
+              "description": "ID of the column to which the todo belongs"
+            },
+            "description": "Column ID"
+          }
+        ],
+        "security": [{ "Bearer": [] }],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateTodoRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Todo created successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Todo"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request",
+            "content": {}
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {}
+          }
+        }
+      }
+    },
+    "/api/todos/{todoId}": {
+      "get": {
+        "tags": ["Todos"],
+        "summary": "Get todo by ID",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "todoId",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "ObjectId"
+            },
+            "description": "ID of the todo to get"
+          }
+        ],
+        "security": [{ "Bearer": [] }],
+        "responses": {
+          "200": {
+            "description": "Successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Todo"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {}
+          },
+          "404": {
+            "description": "Todo not found",
+            "content": {}
+          }
+        }
+      },
+      "delete": {
+        "tags": ["Todos"],
+        "summary": "Delete todo by ID",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "todoId",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "ObjectId"
+            },
+            "description": "ID of the todo to delete"
+          }
+        ],
+        "security": [{ "Bearer": [] }],
+        "responses": {
+          "200": {
+            "description": "Successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Todo"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {}
+          },
+          "404": {
+            "description": "Todo not found",
+            "content": {}
+          }
+        }
+      },
+
+      "patch": {
+        "tags": ["Todos"],
+        "summary": "Update todo by ID",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "todoId",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "ObjectId"
+            },
+            "description": "ID of the todo to update"
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateTodoRequest"
+              }
+            }
+          }
+        },
+        "security": [{ "Bearer": [] }],
+        "responses": {
+          "200": {
+            "description": "Successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Todo"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request",
+            "content": {}
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {}
+          },
+          "404": {
+            "description": "Todo not found",
+            "content": {}
+          }
+        }
+      }
+    },
+    "/todos/{todoId}/owner/{columnId}": {
+      "patch": {
+        "summary": "Change todo's column",
+        "tags": ["Todos"],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "todoId",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "ID of the todo"
+          },
+          {
+            "in": "path",
+            "name": "columnId",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "ID of the column"
+          }
+        ],
+        "security": [{ "Bearer": [] }],
+        "responses": {
+          "200": {
+            "description": "Todo's column changed successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Todo"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid request",
+            "content": {}
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {}
+          },
+          "404": {
+            "description": "Todo or column not found",
+            "content": {}
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {}
+          }
+        }
+      }
+    },
+    "/need-help": {
+      "post": {
+        "tags": ["Email"],
+        "summary": "Send email for help",
+        "security": [{ "bearerAuth": [] }],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/HelpRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Email sent successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Failed to send email",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
     }
   },
 
@@ -460,7 +919,8 @@
         "properties": {
           "name": {
             "type": "string",
-            "description": "User's name"
+            "description": "User's name",
+            "example": "Alex"
           },
           "email": {
             "type": "string",
@@ -720,44 +1180,7 @@
           "columns": []
         }
       },
-      "columns": {
-        "type": "array",
-        "items": {
-          "type": "object",
-          "properties": {
-            "_id": {
-              "type": "string",
-              "description": "Column ID"
-            },
-            "title": {
-              "type": "string",
-              "description": "Column title"
-            },
-            "todos": {
-              "type": "array",
-              "items": {
-                "$ref": "#/components/schemas/Todo"
-              },
-              "description": "List of tasks in this column"
-            }
-          }
-        },
 
-        "BoardDetails": {
-          "type": "object",
-          "properties": {
-            "board": {
-              "$ref": "#/components/schemas/Board"
-            },
-            "columns": {
-              "type": "array",
-              "items": {
-                "$ref": "#/components/schemas/ColumnWithCards"
-              }
-            }
-          }
-        }
-      },
       "UpdateBoardRequest": {
         "type": "object",
         "properties": {
@@ -772,6 +1195,185 @@
           "backgroundURL": {
             "type": "string",
             "description": "Новий URL до фонового зображення дошки"
+          }
+        }
+      },
+      "Column": {
+        "type": "object",
+        "properties": {
+          "title": {
+            "type": "string",
+            "description": "Title of the column"
+          },
+          "boardId": {
+            "type": "string",
+            "description": "ID of the board to which the column belongs"
+          },
+          "_id": {
+            "type": "string",
+            "description": "ID of the column"
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time",
+            "description": "Date and time when the column was created"
+          },
+          "updatedAt": {
+            "type": "string",
+            "format": "date-time",
+            "description": "Date and time when the column was last updated"
+          }
+        },
+        "example": {
+          "_id": "65e7323795f66d6990d1272e",
+          "title": "In Progress",
+          "board": "65e4e00580d9b47fb7b71a93",
+          "createdAt": "2024-03-05T14:54:47.187Z",
+          "updatedAt": "2024-03-05T14:54:47.187Z"
+        }
+      },
+      "CreateColumnRequest": {
+        "type": "object",
+        "properties": {
+          "title": {
+            "type": "string",
+            "description": "Title of the column"
+          }
+        },
+        "required": ["title"],
+        "example": {
+          "title": "In Progress"
+        }
+      },
+      "ColumnWithTodos": {
+        "type": "object",
+        "properties": {
+          "column": {
+            "$ref": "#/components/schemas/Column"
+          },
+          "todos": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Todo"
+            }
+          }
+        }
+      },
+      "UpdateColumnRequest": {
+        "type": "object",
+        "properties": {
+          "title": {
+            "type": "string",
+            "description": "New title of the column"
+          }
+        },
+        "required": ["title"],
+        "example": {
+          "title": "New Title"
+        }
+      },
+      "Todo": {
+        "type": "object",
+        "properties": {
+          "_id": {
+            "type": "string",
+            "description": "Todo identifier",
+            "example": "65e7323795f66d6990d1272e"
+          },
+          "title": {
+            "type": "string",
+            "description": "Todo title",
+            "example": "Finish project report"
+          },
+          "description": {
+            "type": "string",
+            "description": "Todo description",
+            "example": "Write the conclusion section"
+          },
+          "priority": {
+            "type": "string",
+            "enum": ["Without priority", "Low", "Medium", "High"],
+            "description": "Todo priority",
+            "example": "High"
+          },
+          "deadline": {
+            "type": "string",
+            "format": "date-time",
+            "description": "Todo deadline",
+            "example": "2024-03-10T12:00:00Z"
+          },
+          "columnId": {
+            "type": "string",
+            "description": "ID of the column to which the todo belongs",
+            "example": "65e7323795f66d6990d1272e"
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time",
+            "description": "Date and time when the todo was created",
+            "example": "2024-03-05T14:54:47.187Z"
+          },
+          "updatedAt": {
+            "type": "string",
+            "format": "date-time",
+            "description": "Date and time when the todo was last updated",
+            "example": "2024-03-05T14:54:47.187Z"
+          }
+        }
+      },
+      "CreateTodoRequest": {
+        "type": "object",
+        "properties": {
+          "title": {
+            "type": "string",
+            "description": "Title of the todo",
+            "maxLength": 30
+          },
+          "description": {
+            "type": "string",
+            "description": "Description of the todo",
+            "maxLength": 300
+          },
+          "priority": {
+            "type": "string",
+            "description": "Priority of the todo",
+            "enum": ["Without priority", "Low", "Medium", "High"],
+            "default": "Without priority"
+          },
+          "deadline": {
+            "type": "string",
+            "format": "date-time",
+            "description": "Deadline for the todo"
+          }
+        },
+        "required": ["title", "priority", "deadline"],
+        "example": {
+          "title": "Complete assignment",
+          "description": "Finish the project assignment",
+          "priority": "High",
+          "deadline": "2024-03-04T23:59:59.999Z"
+        }
+      },
+      "UpdateTodoRequest": {
+        "type": "object",
+        "properties": {
+          "title": {
+            "type": "string",
+            "example": "Update title"
+          },
+          "description": {
+            "type": "string",
+            "example": "Update description"
+          },
+          "priority": {
+            "type": "string",
+            "enum": ["Without priority", "Low", "Medium", "High"],
+            "example": "High"
+          },
+          "deadline": {
+            "type": "string",
+            "format": "date-time",
+            "example": "2024-03-04T12:00:00Z"
           }
         }
       }
