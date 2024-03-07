@@ -194,7 +194,7 @@
         }
       }
     },
-    "/theme": {
+    "/api/users/theme": {
       "patch": {
         "tags": ["User"],
         "summary": "Update user's theme",
