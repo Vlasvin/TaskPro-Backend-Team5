@@ -1,27 +1,34 @@
+const cloudinary = require("cloudinary").v2;
+const { CloudinaryStorage } = require("multer-storage-cloudinary");
 const multer = require("multer");
-const path = require("path");
-const { HttpError } = require("../helpers");
 
-const tempDir = path.join(__dirname, "../", "temp");
+require("dotenv").config();
 
-const multerConfig = multer.diskStorage({
-  destination: tempDir,
-  filename: (req, file, cd) => {
-    cd(null, file.originalname);
+const { CLOUDINARY_NAME, CLOUDINARY_API_KEY, CLOUDINARY_SECRET } = process.env;
+
+cloudinary.config({
+  cloud_name: CLOUDINARY_NAME,
+  api_key: CLOUDINARY_API_KEY,
+  api_secret: CLOUDINARY_SECRET,
+});
+
+const storage = new CloudinaryStorage({
+  cloudinary: cloudinary,
+
+  params: async (req, file) => {
+    let folder;
+    if (file.fieldname === "avatar") {
+      folder = "avatars";
+    }
+    return {
+      folder: folder,
+      allowed_formats: ["jpg", "png"],
+      public_id: file.originalname,
+      transformation: [{ width: 68, height: 68, crop: "scale" }],
+    };
   },
 });
 
-const multerFilter = (req, file, cd) => {
-  if (file.mimetype.startsWith("image/")) {
-    cd(null, true);
-  } else {
-    cd(HttpError(400, "Please upload images only"));
-  }
-};
-
-const upload = multer({
-  storage: multerConfig,
-  fileFilter: multerFilter,
-});
+const upload = multer({ storage });
 
 module.exports = upload;

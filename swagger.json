@@ -12,8 +12,13 @@
   "consumes": ["application/json", "multipart/form-data"],
   "produces": ["application/json", "multipart/form-data"],
   "servers": [
+<<<<<<< HEAD
     { "url": "http://localhost:3001" },
     { "url": "http://taskpro-backend-uiwy.onrender.com" }
+=======
+    { "url": "http://taskpro-backend-uiwy.onrender.com" },
+    { "url": "http://localhost:3001" }
+>>>>>>> main
   ],
   "tags": [
     {
