@@ -1,17 +1,12 @@
 const gravatar = require("gravatar");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
-const path = require("path");
-const fs = require("fs/promises");
 const crypto = require("crypto");
-const Jimp = require("jimp");
 
 const { User } = require("../schemas/usersSchemas");
 const { ctrlWrapper, HttpError } = require("../helpers");
 
 const { SECRET_KEY } = process.env;
-
-const avatarsDir = path.join(__dirname, "../", "public", "avatars");
 
 const register = async (req, res) => {
   const { email, password } = req.body;
@@ -89,15 +84,7 @@ const logout = async (req, res) => {
 const updateUser = async (req, res) => {
   const { _id } = req.user;
   if (req.file) {
-    const { path: tempUpload, originalname } = req.file;
-
-    const image = await Jimp.read(tempUpload);
-    await image.resize(250, 250).write(tempUpload);
-
-    const filename = `${_id}_${originalname}`;
-    const newUpload = path.join(avatarsDir, filename);
-    await fs.rename(tempUpload, newUpload);
-    const avatarURL = path.join("avatars", filename);
+    const avatarURL = req.file.path;
     await User.findByIdAndUpdate(_id, { avatarURL });
   }
 
@@ -123,20 +110,20 @@ const updateUser = async (req, res) => {
 };
 
 const updateTheme = async (req, res) => {
-    const { _id } = req.user;
-    const updatedUser = await User.findByIdAndUpdate(_id, req.body, {
-        new: true,
-    });
-    res.json({
-        theme: updatedUser.theme,
-    });
+  const { _id } = req.user;
+  const updatedUser = await User.findByIdAndUpdate(_id, req.body, {
+    new: true,
+  });
+  res.json({
+    theme: updatedUser.theme,
+  });
 };
 
 module.exports = {
-    register: ctrlWrapper(register),
-    login: ctrlWrapper(login),
-    getCurrent: ctrlWrapper(getCurrent),
-    logout: ctrlWrapper(logout),
-    updateUser: ctrlWrapper(updateUser),
-    updateTheme: ctrlWrapper(updateTheme),
+  register: ctrlWrapper(register),
+  login: ctrlWrapper(login),
+  getCurrent: ctrlWrapper(getCurrent),
+  logout: ctrlWrapper(logout),
+  updateUser: ctrlWrapper(updateUser),
+  updateTheme: ctrlWrapper(updateTheme),
 };
