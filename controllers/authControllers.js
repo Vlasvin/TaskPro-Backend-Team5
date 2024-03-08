@@ -3,6 +3,7 @@ const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const crypto = require("crypto");
 
+const serv = require("../services/boardsServices");
 const { User } = require("../schemas/usersSchemas");
 const { ctrlWrapper, HttpError } = require("../helpers");
 
@@ -60,15 +61,34 @@ const login = async (req, res) => {
   res.status(200).json({
     token,
     user: {
+      id: user._id,
+      name: user.name,
       email: user.email,
+      avatarURL: user.avatarURL,
+      theme: user.theme,
     },
   });
 };
 
 const getCurrent = async (req, res) => {
-  const { email } = req.user;
+  const { _id: userId } = req.user;
+
+  const user = await User.findById(userId);
+
+  const boards = await serv.listBoards({ owner: userId });
   res.status(200).json({
-    email,
+    user: {
+      id: user._id,
+      name: user.name,
+      email: user.email,
+      avatarURL: user.avatarURL,
+      theme: user.theme,
+    },
+    boards: boards.map((board) => ({
+      id: board._id,
+      title: board.title,
+      background: board.backgroundURL,
+    })),
   });
 };
 
