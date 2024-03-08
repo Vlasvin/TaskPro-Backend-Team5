@@ -971,23 +971,77 @@
           "token": {
             "type": "string",
             "description": "User's token",
-            "example": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY1ZTM1N2QxNzNmMTBkYzY0NTJhM2UzZCIsImlhdCI6MTY0NDA4MTg3Niwic3ViIjoiZnVsbHN0YWNrIiwiaWF0IjoxNjQ0MDgxODc2LCJleHAiOjE2NDQwODIwNzZ9.Ra2vL8ZJ5qV9_c9ABYHAmhGBkzvDe7oaw3vt3SD7XfI"
+            "example": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY1ZTRkNGM5YTE3MDE0OTEzN2VmYzE1MyIsImlhdCI6MTcwOTkwNjYzOSwiZXhwIjoxNzA5OTg5NDM5fQ.wjALCvAag4SyYYTXND9a3OOX9jZM-6qUD-0inA4wolA"
           },
-          "email": {
-            "type": "string",
-            "description": "User's email",
-            "format": "email"
+          "user": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "string",
+                "description": "User's ID",
+                "example": "65e4d4c9a170149137efc153"
+              },
+              "name": {
+                "type": "string",
+                "description": "User's name",
+                "example": "John Doe"
+              },
+              "email": {
+                "type": "string",
+                "description": "User's email",
+                "format": "email",
+                "example": "user@example.com"
+              },
+              "avatarURL": {
+                "type": "string",
+                "description": "URL to user's avatar image",
+                "example": "//www.gravatar.com/avatar/b58996c504c5638798eb6b511e6f49af"
+              },
+              "theme": {
+                "type": "string",
+                "description": "User's preferred theme",
+                "example": "light"
+              }
+            }
           }
         }
       },
+
       "CurrentUserResponse": {
         "type": "object",
         "properties": {
-          "email": {
-            "type": "string",
-            "description": "User's email",
-            "format": "email"
-          }
+          "user": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "string",
+                "description": "User's ID",
+                "example": "65e4d4c9a170149137efc153"
+              },
+              "name": {
+                "type": "string",
+                "description": "User's name",
+                "example": "John Doe"
+              },
+              "email": {
+                "type": "string",
+                "description": "User's email",
+                "format": "email",
+                "example": "user@example.com"
+              },
+              "avatarURL": {
+                "type": "string",
+                "description": "URL to user's avatar image",
+                "example": "//www.gravatar.com/avatar/b58996c504c5638798eb6b511e6f49af"
+              },
+              "theme": {
+                "type": "string",
+                "description": "User's preferred theme",
+                "example": "light"
+              }
+            }
+          },
+          "boards": { "type": "array" }
         }
       },
       "UpdateUserRequest": {
