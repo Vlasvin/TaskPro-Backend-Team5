@@ -1,7 +1,10 @@
 const axios = require("axios");
+const bcrypt = require("bcryptjs");
+const jwt = require("jsonwebtoken");
+const { User } = require("../schemas/usersSchemas");
 const { ctrlWrapper } = require("../helpers");
 
-googleAuth = async (req, res) => {
+const googleAuth = async (req, res) => {
   const queryString = await import("query-string");
   const stringifiedParams = queryString.default.stringify({
     client_id: process.env.GOOGLE_CLIENT_ID,
@@ -20,7 +23,7 @@ googleAuth = async (req, res) => {
   );
 };
 
-googleRedirect = async (req, res) => {
+const googleRedirect = async (req, res) => {
   const queryString = await import("query-string");
   const fullUrl = `${req.protocol}://${req.get("host")}${req.originalUrl}`;
   const urlObj = new URL(fullUrl);
@@ -47,9 +50,29 @@ googleRedirect = async (req, res) => {
     },
   });
 
-  //тут повинна бути логіка обробки юзера, якщо такого email немає в базі, створюємо нового користувача. Також створюємо accessToken. Перевіряв роботу додавши на любий фронт такий лінк   <a href="http://localhost:3001/api/users/google">GOOGLE</a> Думаю класно було б зробити, щоб фото з userData.picture зберігалось як аватар нашого юзера, якщо воно є
+  let user = await User.findOne({ email: userData.data.email });
+  if (!user) {
+    const password = bcrypt.hashSync(userData.data.email, 10);
+    user = await User.create({
+      email: userData.data.email,
+      name: userData.data.name,
+      avatarURL: userData.data.picture,
+      password,
+    });
+  }
+
+  const payload = { id: user._id };
+  const accessToken = jwt.sign(payload, process.env.SECRET_KEY, {
+    expiresIn: "1d",
+  });
+  const refreshToken = jwt.sign({}, process.env.REFRESH_SECRET_KEY, {
+    expiresIn: "7d",
+  });
+
+  await User.findByIdAndUpdate(user._id, { accessToken, refreshToken });
 
   return res.redirect(
+    console.log(accessToken),
     `${process.env.FRONTEND_URL}?accessToken=${accessToken}&refreshToken=${refreshToken}`
   );
 };
