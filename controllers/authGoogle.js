@@ -69,13 +69,18 @@ const googleRedirect = async (req, res) => {
     expiresIn: "7d",
   });
 
-  await User.findByIdAndUpdate(user._id, { accessToken, refreshToken });
+  await User.findByIdAndUpdate(user._id, { token: accessToken, refreshToken });
 
   return res.redirect(
-    console.log(accessToken),
-    `${process.env.FRONTEND_URL}?accessToken=${accessToken}&refreshToken=${refreshToken}`
+    user,
+    accessToken,
+    refreshToken
+    // `${process.env.FRONTEND_URL}?accessToken=${accessToken}&refreshToken=${refreshToken}`
   );
 };
+// <a href="https://localhost:3001/api/users/google">
+// click auth GOOGLE
+// </a>
 
 module.exports = {
   googleAuth: ctrlWrapper(googleAuth),
