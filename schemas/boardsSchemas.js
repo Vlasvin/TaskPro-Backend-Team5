@@ -8,7 +8,7 @@ const boardSchema = new Schema(
       required: true,
       trim: true,
     },
-    iconsURL: String,
+    iconURL: String,
     backgroundURL: String,
     owner: {
       type: Types.ObjectId,
