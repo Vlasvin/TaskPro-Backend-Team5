@@ -864,7 +864,6 @@
       "post": {
         "tags": ["Email"],
         "summary": "Send email for help",
-        "security": [{ "bearerAuth": [] }],
         "requestBody": {
           "required": true,
           "content": {
@@ -875,6 +874,7 @@
             }
           }
         },
+        "security": [{ "Bearer": [] }],
         "responses": {
           "200": {
             "description": "Email sent successfully",
