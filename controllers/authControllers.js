@@ -3,7 +3,7 @@ const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const crypto = require("crypto");
 
-require("dotenv").config();
+// require("dotenv").config();
 
 const serv = require("../services/boardsServices");
 const { User } = require("../schemas/usersSchemas");
