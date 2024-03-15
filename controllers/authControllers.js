@@ -3,6 +3,8 @@ const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const crypto = require("crypto");
 
+require("dotenv").config();
+
 const serv = require("../services/boardsServices");
 const { User } = require("../schemas/usersSchemas");
 const { ctrlWrapper, HttpError } = require("../helpers");
@@ -35,6 +37,7 @@ const register = async (req, res) => {
   res.status(201).json({
     user: {
       email: newUser.email,
+      name: newUser.name,
       token,
     },
   });
