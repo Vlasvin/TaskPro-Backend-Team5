@@ -38,6 +38,7 @@ const register = async (req, res) => {
     user: {
       email: newUser.email,
       name: newUser.name,
+      avatarURL: newUser.avatarURL,
       token,
     },
   });
