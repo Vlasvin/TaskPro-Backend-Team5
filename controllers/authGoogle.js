@@ -5,7 +5,7 @@ const { User } = require("../schemas/usersSchemas");
 const { ctrlWrapper } = require("../helpers");
 
 const googleAuth = async (req, res) => {
-  const queryString = require("query-string");
+  const queryString = await import("query-string");
   const stringifiedParams = queryString.default.stringify({
     client_id: process.env.GOOGLE_CLIENT_ID,
     redirect_uri: `${process.env.BASE_URL}/users/google-redirect`,
