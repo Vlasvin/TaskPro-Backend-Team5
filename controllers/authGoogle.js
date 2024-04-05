@@ -5,7 +5,7 @@ const { User } = require("../schemas/usersSchemas");
 const { ctrlWrapper } = require("../helpers");
 
 const googleAuth = async (req, res) => {
-  const queryString = await import("query-string");
+  const queryString = require("query-string");
   const stringifiedParams = queryString.default.stringify({
     client_id: process.env.GOOGLE_CLIENT_ID,
     redirect_uri: `${process.env.BASE_URL}/users/google-redirect`,
@@ -71,7 +71,6 @@ const googleRedirect = async (req, res) => {
   });
 
   await User.findByIdAndUpdate(user._id, { token: accessToken, refreshToken });
-
   return res.redirect(
     `${process.env.FRONTEND_URL}?accessToken=${accessToken}&refreshToken=${refreshToken}`
   );
