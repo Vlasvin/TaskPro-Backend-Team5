@@ -29,6 +29,7 @@ const googleRedirect = async (req, res) => {
   const urlObj = new URL(fullUrl);
   const urlParams = queryString.default.parse(urlObj.search);
   const code = urlParams.code;
+  console.log(fullUrl);
 
   const tokenData = await axios({
     url: `https://oauth2.googleapis.com/token`,
@@ -41,7 +42,7 @@ const googleRedirect = async (req, res) => {
       code: code,
     },
   });
-
+  console.log(tokenData);
   const userData = await axios({
     url: "https://www.googleapis.com/oauth2/v2/userinfo",
     method: "get",
@@ -65,7 +66,7 @@ const googleRedirect = async (req, res) => {
   const accessToken = jwt.sign(payload, process.env.SECRET_KEY, {
     expiresIn: "1d",
   });
-
+  console.log(payload);
   const refreshToken = jwt.sign({}, process.env.REFRESH_SECRET_KEY, {
     expiresIn: "7d",
   });
