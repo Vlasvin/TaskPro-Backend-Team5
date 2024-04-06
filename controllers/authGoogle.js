@@ -76,9 +76,6 @@ const googleRedirect = async (req, res) => {
     `${process.env.FRONTEND_URL}?accessToken=${accessToken}&refreshToken=${refreshToken}`
   );
 };
-// <a href="https://localhost:3001/api/users/google">
-// click auth GOOGLE
-// </a>
 
 module.exports = {
   googleAuth: ctrlWrapper(googleAuth),
