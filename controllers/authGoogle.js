@@ -51,7 +51,7 @@ const googleRedirect = async (req, res) => {
   });
 
   let user = await User.findOne({ email: userData.data.email });
-  if (user) {
+  if (!user) {
     // const password = bcrypt.hashSync(userData.data.email, 10);
     newUser = await User.create({
       email: userData.data.email,
@@ -70,7 +70,7 @@ const googleRedirect = async (req, res) => {
     expiresIn: "7d",
   });
 
-  await User.findByIdAndUpdate(user._id, { token: accessToken, refreshToken });
+  await User.findByIdAndUpdate(user._id, { token: accessToken });
   return res.redirect(
     `${process.env.FRONTEND_URL}handle-auth?accessToken=${accessToken}&refreshToken=${refreshToken}`
   );
