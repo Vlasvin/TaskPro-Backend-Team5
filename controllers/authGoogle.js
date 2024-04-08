@@ -67,15 +67,17 @@ const googleRedirect = async (req, res) => {
     });
   }
 
-  const payload = { id: newUser?._id };
+  const payload = { id: newUser._id };
   const accessToken = jwt.sign(payload, process.env.SECRET_KEY, {
     expiresIn: "1d",
   });
 
   await User.findByIdAndUpdate(newUser._id, { token: accessToken });
-  return res.redirect(
-    `${process.env.FRONTEND_URL}handle-auth?accessToken=${accessToken}`
-  );
+  if (newUser) {
+    return res.redirect(
+      `${process.env.FRONTEND_URL}handle-auth?accessToken=${accessToken}`
+    );
+  }
 };
 
 module.exports = {
