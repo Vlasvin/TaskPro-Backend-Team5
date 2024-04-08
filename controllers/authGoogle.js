@@ -54,13 +54,13 @@ const googleRedirect = async (req, res) => {
   console.log(userData);
   if (!user) {
     const password = bcrypt.hashSync(userData.data.email, 10);
+    console.log(password);
     newUser = await User.create({
       email: userData.data.email,
       name: userData.data.name,
       avatarURL: userData.data.picture,
       password,
     });
-    console.log(newUser);
   }
 
   const payload = { id: user._id };
