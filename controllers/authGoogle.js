@@ -65,14 +65,20 @@ const googleRedirect = async (req, res) => {
       avatarURL: picture,
       password,
     });
-  }
 
-  if (newUser) {
     const payload = { id: newUser.id };
     accessToken = jwt.sign(payload, process.env.SECRET_KEY, {
       expiresIn: "1d",
     });
+
     await User.findByIdAndUpdate(newUser.id, { token: accessToken });
+  } else {
+    const payload = { id: user.id };
+    accessToken = jwt.sign(payload, process.env.SECRET_KEY, {
+      expiresIn: "1d",
+    });
+
+    await User.findByIdAndUpdate(user.id, { token: accessToken });
   }
 
   return res.redirect(
