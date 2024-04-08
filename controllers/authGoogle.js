@@ -56,7 +56,7 @@ const googleRedirect = async (req, res) => {
   let accessToken = null;
   console.log("user:", user);
 
-  if (!user) {
+  if (user === null) {
     console.log(user);
     const { email, name, picture } = userData.data;
     const password = bcrypt.hashSync(email, 10);
