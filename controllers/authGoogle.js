@@ -54,6 +54,7 @@ const googleRedirect = async (req, res) => {
   console.log(userData);
 
   let newUser = null;
+  let accessToken = null;
 
   if (!user) {
     const { email, name, picture } = userData.data;
@@ -67,17 +68,17 @@ const googleRedirect = async (req, res) => {
     });
   }
 
-  const payload = { id: newUser._id };
-  const accessToken = jwt.sign(payload, process.env.SECRET_KEY, {
-    expiresIn: "1d",
-  });
+  if (newUser) {
+    const payload = { id: newUser._id };
+    accessToken = jwt.sign(payload, process.env.SECRET_KEY, {
+      expiresIn: "1d",
+    });
+  }
 
   await User.findByIdAndUpdate(newUser._id, { token: accessToken });
-  if (newUser) {
-    return res.redirect(
-      `${process.env.FRONTEND_URL}handle-auth?accessToken=${accessToken}`
-    );
-  }
+  return res.redirect(
+    `${process.env.FRONTEND_URL}handle-auth?accessToken=${accessToken}`
+  );
 };
 
 module.exports = {
