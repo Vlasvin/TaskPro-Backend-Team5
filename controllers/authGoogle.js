@@ -54,6 +54,7 @@ const googleRedirect = async (req, res) => {
 
   let newUser = null;
   let accessToken = null;
+  console.log("user:", user);
 
   if (!user) {
     console.log(user);
