@@ -69,13 +69,13 @@ const googleRedirect = async (req, res) => {
   }
 
   if (newUser) {
-    const payload = { id: newUser._id };
+    const payload = { id: newUser.id };
     accessToken = jwt.sign(payload, process.env.SECRET_KEY, {
       expiresIn: "1d",
     });
   }
 
-  await User.findByIdAndUpdate(newUser._id, { token: accessToken });
+  await User.findByIdAndUpdate(newUser.id, { token: accessToken });
   return res.redirect(
     `${process.env.FRONTEND_URL}handle-auth?accessToken=${accessToken}`
   );
