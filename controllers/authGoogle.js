@@ -53,15 +53,15 @@ const googleRedirect = async (req, res) => {
   let user = await User.findOne({ email: userData.data.email });
   console.log(userData);
   if (!user) {
-    // const password = bcrypt.hashSync(userData.data.email, 10);
+    const password = bcrypt.hashSync(userData.data.email, 10);
     newUser = await User.create({
       email: userData.data.email,
       name: userData.data.name,
       avatarURL: userData.data.picture,
-      // password,
+      password,
     });
   }
-
+  console.log(newUser);
   const payload = { id: user._id };
   const accessToken = jwt.sign(payload, process.env.SECRET_KEY, {
     expiresIn: "1d",
