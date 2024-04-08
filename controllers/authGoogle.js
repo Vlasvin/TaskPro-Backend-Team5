@@ -51,6 +51,7 @@ const googleRedirect = async (req, res) => {
   });
 
   let user = await User.findOne({ email: userData.data.email });
+  console.log(user);
   if (!user) {
     // const password = bcrypt.hashSync(userData.data.email, 10);
     newUser = await User.create({
