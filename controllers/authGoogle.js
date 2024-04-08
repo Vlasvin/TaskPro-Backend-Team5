@@ -60,15 +60,16 @@ const googleRedirect = async (req, res) => {
       avatarURL: userData.data.picture,
       password,
     });
+    console.log(newUser);
   }
-  console.log(newUser);
+
   const payload = { id: user._id };
   const accessToken = jwt.sign(payload, process.env.SECRET_KEY, {
     expiresIn: "1d",
   });
-  const refreshToken = jwt.sign({}, process.env.REFRESH_SECRET_KEY, {
-    expiresIn: "7d",
-  });
+  // const refreshToken = jwt.sign({}, process.env.REFRESH_SECRET_KEY, {
+  //   expiresIn: "7d",
+  // });
 
   await User.findByIdAndUpdate(user._id, { token: accessToken });
   return res.redirect(
