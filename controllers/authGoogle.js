@@ -24,58 +24,110 @@ const googleAuth = async (req, res) => {
 };
 
 const googleRedirect = async (req, res) => {
-  const queryString = await import("query-string");
-  const fullUrl = `${req.protocol}://${req.get("host")}${req.originalUrl}`;
-  const urlObj = new URL(fullUrl);
-  const urlParams = queryString.default.parse(urlObj.search);
-  const code = urlParams.code;
+  try {
+    const queryString = require("query-string");
+    const { data: tokenData } = await axios.post(
+      `https://oauth2.googleapis.com/token`,
+      {
+        client_id: process.env.GOOGLE_CLIENT_ID,
+        client_secret: process.env.GOOGLE_CLIENT_SECRET,
+        redirect_uri: `${process.env.BASE_URL}/api/users/google-redirect`,
+        grant_type: "authorization_code",
+        code: req.query.code,
+      }
+    );
 
-  const tokenData = await axios({
-    url: `https://oauth2.googleapis.com/token`,
-    method: "post",
-    data: {
-      client_id: process.env.GOOGLE_CLIENT_ID,
-      client_secret: process.env.GOOGLE_CLIENT_SECRET,
-      redirect_uri: `${process.env.BASE_URL}/api/users/google-redirect`,
-      grant_type: "authorization_code",
-      code: code,
-    },
-  });
+    const { data: userData } = await axios.get(
+      "https://www.googleapis.com/oauth2/v2/userinfo",
+      {
+        headers: {
+          Authorization: `Bearer ${tokenData.access_token}`,
+        },
+      }
+    );
 
-  const userData = await axios({
-    url: "https://www.googleapis.com/oauth2/v2/userinfo",
-    method: "get",
-    headers: {
-      Authorization: `Bearer ${tokenData.data.access_token}`,
-    },
-  });
+    let user = await User.findOne({ email: userData.email });
 
-  let user = await User.findOne({ email: userData.data.email });
-  console.log(userData);
-  if (!user) {
-    const password = bcrypt.hashSync(userData.data.email, 10);
-    console.log(password);
-    newUser = await User.create({
-      email: userData.data.email,
-      name: userData.data.name,
-      avatarURL: userData.data.picture,
-      password,
+    if (!user) {
+      const password = bcrypt.hashSync(userData.email, 10);
+      const newUser = await User.create({
+        email: userData.email,
+        name: userData.name,
+        avatarURL: userData.picture,
+        password,
+      });
+      user = newUser;
+    }
+
+    const payload = { id: user._id };
+    const accessToken = jwt.sign(payload, process.env.SECRET_KEY, {
+      expiresIn: "1d",
     });
+
+    await User.findByIdAndUpdate(user._id, { token: accessToken });
+
+    return res.redirect(
+      `${process.env.FRONTEND_URL}handle-auth?accessToken=${accessToken}`
+    );
+  } catch (error) {
+    console.error("Error in Google redirection:", error);
+    return res.status(500).json({ error: "Internal Server Error" });
   }
-
-  const payload = { id: user._id };
-  const accessToken = jwt.sign(payload, process.env.SECRET_KEY, {
-    expiresIn: "1d",
-  });
-  // const refreshToken = jwt.sign({}, process.env.REFRESH_SECRET_KEY, {
-  //   expiresIn: "7d",
-  // });
-
-  await User.findByIdAndUpdate(user._id, { token: accessToken });
-  return res.redirect(
-    `${process.env.FRONTEND_URL}handle-auth?accessToken=${accessToken}`
-  );
 };
+
+// const googleRedirect = async (req, res) => {
+//   const queryString = await import("query-string");
+//   const fullUrl = `${req.protocol}://${req.get("host")}${req.originalUrl}`;
+//   const urlObj = new URL(fullUrl);
+//   const urlParams = queryString.default.parse(urlObj.search);
+//   const code = urlParams.code;
+
+//   const tokenData = await axios({
+//     url: `https://oauth2.googleapis.com/token`,
+//     method: "post",
+//     data: {
+//       client_id: process.env.GOOGLE_CLIENT_ID,
+//       client_secret: process.env.GOOGLE_CLIENT_SECRET,
+//       redirect_uri: `${process.env.BASE_URL}/api/users/google-redirect`,
+//       grant_type: "authorization_code",
+//       code: code,
+//     },
+//   });
+
+//   const userData = await axios({
+//     url: "https://www.googleapis.com/oauth2/v2/userinfo",
+//     method: "get",
+//     headers: {
+//       Authorization: `Bearer ${tokenData.data.access_token}`,
+//     },
+//   });
+
+//   let user = await User.findOne({ email: userData.data.email });
+//   console.log(userData);
+//   if (!user) {
+//     const password = bcrypt.hashSync(userData.data.email, 10);
+
+//     newUser = await User.create({
+//       email: userData.data.email,
+//       name: userData.data.name,
+//       avatarURL: userData.data.picture,
+//       password,
+//     });
+//   }
+
+//   const payload = { id: user._id };
+//   const accessToken = jwt.sign(payload, process.env.SECRET_KEY, {
+//     expiresIn: "1d",
+//   });
+//   // const refreshToken = jwt.sign({}, process.env.REFRESH_SECRET_KEY, {
+//   //   expiresIn: "7d",
+//   // });
+
+//   await User.findByIdAndUpdate(user._id, { token: accessToken });
+//   return res.redirect(
+//     `${process.env.FRONTEND_URL}handle-auth?accessToken=${accessToken}`
+//   );
+// };
 
 module.exports = {
   googleAuth: ctrlWrapper(googleAuth),
