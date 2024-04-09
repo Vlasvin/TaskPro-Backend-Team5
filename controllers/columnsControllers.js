@@ -1,6 +1,5 @@
 const serv = require("../services/columnsServices.js");
 const { ctrlWrapper } = require("../helpers/index.js");
-
 const { Todo } = require("../schemas/todosSchemas");
 
 const createColumn = async (req, res) => {

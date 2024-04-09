@@ -6,12 +6,10 @@ const todoSchema = new Schema(
     title: {
       type: String,
       required: true,
-      //   maxLength: 30,
       trim: true,
     },
     description: {
       type: String,
-      //   maxLength: 300,
     },
     priority: {
       type: String,

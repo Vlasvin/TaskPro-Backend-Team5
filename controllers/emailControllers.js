@@ -1,4 +1,5 @@
 const sgMail = require("@sendgrid/mail");
+
 const { ctrlWrapper } = require("../helpers");
 
 const { SG_API_KEY } = process.env;
