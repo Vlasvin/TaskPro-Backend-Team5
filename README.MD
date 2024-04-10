@@ -68,6 +68,6 @@ This project is licensed under the ISC License.
 
 ## Authors
 
-[Oleksii Vlasenko](https://linkedin.com/in/oleksii-vlasenko)
-[RomanSoldatov](https://github.com/RomanSoldatov)
+[Oleksii Vlasenko](https://linkedin.com/in/oleksii-vlasenko) /
+[RomanSoldatov](https://github.com/RomanSoldatov) /
 [Dmytro Perepelytsa](https://github.com/VIPon4ik)
